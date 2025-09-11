@@ -1,115 +1,79 @@
-# Cluster Delta (MERN Stack)
+# Cluster Delta Project
 
-This repository contains a full-stack social media application built with the MERN stack.
-
-## MERN Architecture
-
-The application is divided into two main parts:
-
--   **`client`**: A React application created with Create React App that serves as the frontend.
--   **`server`**: A Node.js and Express application that provides the backend API.
-
-### How they work together
-
-1.  **React Client**: The user interacts with the React application in their browser. When a user performs an action (e.g., logs in, creates a post), the client sends an HTTP request to the backend API.
-2.  **Express Server**: The Express server receives the request, processes it, and interacts with the MongoDB database.
-3.  **MongoDB Database**: The server uses Mongoose to model the application data and interact with the MongoDB database.
-4.  **Data Flow**: The server sends a response back to the client, which then updates the UI to reflect the changes.
+Below are the instructions for setting up and running the project.
 
 ---
 
-## Project Structure
+## Folder Structure
 
 ```
-cluster-delta/
-├── client/                 # React frontend
-│   ├── public/
-│   └── src/
-│       ├── components/     # Reusable React components
-│       ├── pages/          # Main pages of the application
-│       ├── redux/          # Redux store and slices
-│       └── utils/          # Utility functions (e.g., api.js)
-└── server/                 # Node.js backend
-    ├── controllers/        # Logic for handling requests
-    ├── dbConfig/           # MongoDB connection configuration
-    ├── middleware/         # Custom middleware (e.g., authentication)
-    ├── models/             # Mongoose data models
-    └── routes/             # API routes
+cluster-delta
+
+├── client
+├── server
 ```
 
----
-
-## API Endpoints
-
-The server exposes the following API endpoints:
-
--   `POST /auth/register`: Register a new user.
--   `POST /auth/login`: Log in a user.
--   `POST /posts/create-post`: Create a new post.
--   `GET /posts`: Get all posts.
--   `GET /posts/:id`: Get a single post.
--   `POST /posts/like/:id`: Like a post.
--   `POST /posts/comment/:id`: Comment on a post.
--   `DELETE /posts/:id`: Delete a post.
--   `GET /users/get-user/:id?`: Get user information.
--   `PUT /users/update-user`: Update user information.
--   `POST /users/friend-request`: Send a friend request.
--   `POST /users/accept-request`: Accept a friend request.
+- **client**: Frontend code (Next.js application).
+- **server**: Backend code (Node.js application).
 
 ---
 
-## Getting Started
+## Setup Instructions
 
-### Prerequisites
+### Frontend (Client)
 
--   Node.js and npm
--   MongoDB
+1. Navigate to the client directory:
+   ```bash
+   cd client
+   ```
+2. Install dependencies:
+   ```bash
+   npm install --force
+   ```
+3. Start the client:
+   ```bash
+   npm start
+   ```
 
-### Installation and Setup
+### Backend (Server)
 
-1.  **Clone the repository:**
+1. Open a New Terminal
 
-    ```bash
-    git clone https://github.com/your-username/cluster-delta.git
-    cd cluster-delta
-    ```
+2. Navigate to the server directory:
+   ```bash
+   cd server
+   ```
+3. Install dependencies:
+   ```bash
+   npm install --force
+   ```
+4. Start the server:
+   ```bash
+   npm start
+   ```
 
-2.  **Setup the server:**
+---
 
-    ```bash
-    cd server
-    npm install
-    ```
+## Defaults
 
-    Create a `.env` file in the `server` directory and add your MongoDB connection string and other environment variables.
+- Client dev server: http://localhost:3000
+- API server: http://localhost:8800
 
-3.  **Setup the client:**
+---
 
-    ```bash
-    cd ../client
-    npm install
-    ```
+## Environment Variables
 
-    Create a `.env` file in the `client` directory and add the following:
+- The env file for `server` folder is there in the repo already.
+- The env file for `client` folder is not there in the repo. Create a new file named `.env.local` in the `client` folder and add the following line:
+  ```bash
+  NEXT_PUBLIC_API_URL=http://localhost:8800
+  ```
 
-    ```
-    REACT_APP_API_URL=http://localhost:8800
-    ```
+---
 
-### Running the Application
+## MongoDB Access
 
-1.  **Start the server:**
+- Download and Install MongoDB Compass on your Machine
+- MongoDB Connectuon URI is given in the .env file of `/server` folder. Copy that and paste it in new connection option inside Compass App
 
-    ```bash
-    cd server
-    npm start
-    ```
-
-2.  **Start the client:**
-
-    ```bash
-    cd ../client
-    npm start
-    ```
-
-The client will be running at `http://localhost:3000` and the server at `http://localhost:8800`.
+---
