@@ -55,54 +55,14 @@ const Register = () => {
 		setIsDrawerOpen(false);
 	};
 
-	// const onSubmit = async (data) => {
-	//   setIsSubmitting(true);
-
-	//   try {
-	//     const response = await fetch(
-	//       "https://cluster-delta.onrender.com/auth/register",
-	//       {
-	//         method: "POST",
-	//         headers: {
-	//           "Content-Type": "application/json",
-	//         },
-	//         body: JSON.stringify(data),
-	//       }
-	//     );
-
-	//     if (response.ok) {
-	//       const result = await response.json();
-	//       setErrMsg({
-	//         status: "success",
-	//         message: "Registration successful!",
-	//       });
-
-	//       const newData = { token: result?.token, ...result?.user };
-	//       console.log("Registration successful! Data:", result);
-	//       console.log("New user data:", newData);
-	//       dispatch(UserLogin(newData));
-
-	//       setTimeout(() => {
-	//         window.location.replace("/login");
-	//       }, 2000);
-	//     } else {
-	//       // Handle registration failure
-	//     }
-	//   } catch (error) {
-	//     // Handle error
-	//   } finally {
-	//     setIsSubmitting(false);
-	//   }
-	// };
-
 	const onSubmit = async (data) => {
 		setIsSubmitting(true);
 
 		try {
-			// Add the selected image URL to the data object
 			const postData = {
 				...data,
 				profileUrl: selectedImage,
+				skills: (data.skills || '').split(',').map((s) => s.trim()).filter(Boolean),
 			};
 
 			const response = await fetch(`${BACKEND_URL}/auth/register`, {
@@ -121,8 +81,6 @@ const Register = () => {
 				});
 
 				const newData = { token: result?.token, ...result?.user };
-				console.log('Registration successful! Data:', result);
-				console.log('New user data:', newData);
 				dispatch(UserLogin(newData));
 
 				setTimeout(() => {
@@ -137,46 +95,6 @@ const Register = () => {
 			setIsSubmitting(false);
 		}
 	};
-
-	// const onSubmit = async (data) => {
-	//   setIsSubmitting(true);
-
-	//   try {
-	//     const response = await fetch("https://cluster-delta.onrender.com/auth/register", {
-	//       method: "POST",
-	//       headers: {
-	//         "Content-Type": "application/json",
-	//       },
-	//       body: JSON.stringify(data),
-	//     });
-
-	//     if (response.ok) {
-	//       const result = await response.json();
-	//       setErrMsg({
-	//         status: "success",
-	//         message: "Registration successful!",
-	//       });
-
-	//       const newData = { token: result?.token, ...result?.user };
-	//       dispatch(UserLogin(newData));
-
-	//       setTimeout(() => {
-	//         window.location.replace("/");
-	//       }, 2000);
-	//     } else {
-	//       const result = await response.json();
-	//       setErrMsg({
-	//         status: "failed",
-	//         message: result.message || "Registration failed. Please try again.",
-	//       });
-	//       console.error("Registration failed", result.message);
-	//     }
-	//   } catch (error) {
-	//     console.error("Error during registration", error);
-	//   } finally {
-	//     setIsSubmitting(false);
-	//   }
-	// };
 
 	return (
 		<div
@@ -236,28 +154,21 @@ const Register = () => {
 						onSubmit={handleSubmit(onSubmit)}
 					>
 						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-							{/* BUTTON TO OPEN PROFILE DRAWER */}
-
 							<TextInput
 								name='firstName'
 								label='First Name'
 								placeholder='First Name'
 								type='text'
 								styles='w-full'
-								register={register('firstName', {
-									required: 'First Name is required!',
-								})}
+								register={register('firstName', { required: 'First Name is required!' })}
 								error={errors.firstName ? errors.firstName?.message : ''}
 							/>
-
 							<TextInput
 								label='Last Name'
 								placeholder='Last Name'
 								type='lastName'
 								styles='w-full'
-								register={register('lastName', {
-									required: 'Last Name do no match',
-								})}
+								register={register('lastName', { required: 'Last Name do no match' })}
 								error={errors.lastName ? errors.lastName?.message : ''}
 							/>
 						</div>
@@ -267,9 +178,7 @@ const Register = () => {
 							placeholder='email@example.com'
 							label='Email Address'
 							type='email'
-							register={register('email', {
-								required: 'Email Address is required',
-							})}
+							register={register('email', { required: 'Email Address is required' })}
 							styles='w-full'
 							error={errors.email ? errors.email.message : ''}
 						/>
@@ -281,12 +190,9 @@ const Register = () => {
 								placeholder='Password'
 								type='password'
 								styles='w-full'
-								register={register('password', {
-									required: 'Password is required!',
-								})}
+								register={register('password', { required: 'Password is required!' })}
 								error={errors.password ? errors.password?.message : ''}
 							/>
-
 							<TextInput
 								label='Confirm Password'
 								placeholder='Password'
@@ -295,28 +201,43 @@ const Register = () => {
 								register={register('cPassword', {
 									validate: (value) => {
 										const { password } = getValues();
-
 										if (password != value) {
 											return 'Passwords do no match';
 										}
 									},
 								})}
-								error={
-									errors.cPassword && errors.cPassword.type === 'validate'
-										? errors.cPassword?.message
-										: ''
-								}
+								error={errors.cPassword && errors.cPassword.type === 'validate' ? errors.cPassword?.message : ''}
 							/>
 						</div>
 
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<select className='input input-bordered w-full' {...register('role')}> 
+								<option value='student'>Student</option>
+								<option value='research_scholar'>Research Scholar</option>
+							</select>
+							<select className='input input-bordered w-full' {...register('experienceLevel')}> 
+								<option value='beginner'>Beginner</option>
+								<option value='intermediate'>Intermediate</option>
+								<option value='advanced'>Advanced</option>
+								<option value='expert'>Expert</option>
+							</select>
+						</div>
+
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<TextInput name='portfolioUrl' label='Portfolio URL' placeholder='https://...' type='text' styles='w-full' register={register('portfolioUrl')} />
+							<TextInput name='githubUrl' label='GitHub URL' placeholder='https://github.com/...' type='text' styles='w-full' register={register('githubUrl')} />
+						</div>
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<TextInput name='linkedinUrl' label='LinkedIn URL' placeholder='https://linkedin.com/in/...' type='text' styles='w-full' register={register('linkedinUrl')} />
+							<TextInput name='university' label='University' placeholder='Your University' type='text' styles='w-full' register={register('university')} />
+						</div>
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<TextInput name='graduationYear' label='Graduation Year' placeholder='2026' type='number' styles='w-full' register={register('graduationYear')} />
+							<TextInput name='skills' label='Skills (comma separated)' placeholder='React, Node, ML' type='text' styles='w-full' register={register('skills')} />
+						</div>
+
 						{errMsg?.message && (
-							<span
-								className={`text-sm ${
-									errMsg?.status == 'failed'
-										? 'text-[#f64949fe]'
-										: 'text-[#2ba150fe]'
-								} mt-0.5`}
-							>
+							<span className={`text-sm ${errMsg?.status == 'failed' ? 'text-[#f64949fe]' : 'text-[#2ba150fe]'} mt-0.5`}>
 								{errMsg?.message}
 							</span>
 						)}
@@ -324,20 +245,13 @@ const Register = () => {
 						{isSubmitting ? (
 							<Loading />
 						) : (
-							<CustomButton
-								type='submit'
-								containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
-								title='Create Account'
-							/>
+							<CustomButton type='submit' containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`} title='Create Account' />
 						)}
 					</form>
 
 					<p className='text-ascent-2 text-sm text-center'>
 						Already has an account?{' '}
-						<Link
-							to='/login'
-							className='text-[#065ad8] font-semibold ml-2 cursor-pointer'
-						>
+						<Link to='/login' className='text-[#065ad8] font-semibold ml-2 cursor-pointer'>
 							Login
 						</Link>
 					</p>
@@ -346,28 +260,20 @@ const Register = () => {
 
 				<div className='hidden w-1/2 h-full lg:flex flex-col items-center justify-center bg-blue'>
 					<div className='relative w-full flex items-center justify-center'>
-						<img
-							src={Bgmain}
-							alt='Bg Image'
-							className='w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover'
-						/>
-
+						<img src={Bgmain} alt='Bg Image' className='w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover' />
 						<div className='absolute flex items-center gap-1 bg-white right-10 top-10 py-2 px-5 rounded-full'>
 							<BsShare size={14} />
 							<span className='text-xs font-medium'>Share</span>
 						</div>
-
 						<div className='absolute flex items-center gap-1 bg-white left-10 top-6 py-2 px-5 rounded-full'>
 							<ImConnection />
 							<span className='text-xs font-medium'>Connect</span>
 						</div>
-
 						<div className='absolute flex items-center gap-1 bg-white left-12 bottom-6 py-2 px-5 rounded-full'>
 							<AiOutlineInteraction />
 							<span className='text-xs font-medium'>Interact</span>
 						</div>
 					</div>
-
 					<div className='mt-16 text-center'>
 						<p className='text-white text-base'>
 							Connect with Friends & have fun
@@ -380,60 +286,25 @@ const Register = () => {
 				</div>
 			</div>
 
-			{/* BOTTOM DRAWER TO CHOOSE PROFILE PIC */}
 			{isDrawerOpen && (
-				<div className='fixed inset-0 bg-gray-700 bg-opacity-50 z-50 backdrop-filter backdrop-blur-md'>
-					{/* Background overlay when drawer is open */}
-				</div>
+				<div className='fixed inset-0 bg-gray-700 bg-opacity-50 z-50 backdrop-filter backdrop-blur-md'></div>
 			)}
 
 			{isDrawerOpen && (
 				<div className='fixed inset-0 flex items-end justify-center z-50'>
-					<div
-						style={{ backgroundColor: '#000000' }}
-						className='p-4 rounded-t-lg'
-					>
-						{/* Drawer content */}
+					<div style={{ backgroundColor: '#000000' }} className='p-4 rounded-t-lg'>
 						<div className='flex justify-end'>
-							{/* Close icon at the top right of the drawer */}
-							<FaTimes
-								onClick={() => closeDrawer()}
-								style={{ color: 'red' }}
-								className='cursor-pointer text-red-500 text-2xl'
-							/>
+							<FaTimes onClick={() => closeDrawer()} style={{ color: 'red' }} className='cursor-pointer text-red-500 text-2xl' />
 						</div>
 						<div className='flex flex-col items-center'>
 							<p style={{ color: 'white' }}>Choose Your Profile Picture.</p>
-
-							{/* Avatar selection */}
 							<div className='flex flex-wrap justify-center mt-4'>
 								{imageUrls.map((imageUrl, index) => (
-									<img
-										key={index}
-										src={imageUrl}
-										style={{
-											margin: '8px',
-											width: '80px',
-											height: '80px',
-										}}
-										alt={`Avatar ${index + 1}`}
-										className={`rounded-full cursor-pointer ${
-											selectedImage === imageUrl
-												? 'border-4 border-blue-500'
-												: ''
-										}`}
-										onClick={() => {
-											handleImageSelect(imageUrl);
-											setHostedURL(imageUrl);
-											closeDrawer();
-										}}
-									/>
+									<img key={index} src={imageUrl} style={{ margin: '8px', width: '80px', height: '80px' }} alt={`Avatar ${index + 1}`} className={`rounded-full cursor-pointer ${selectedImage === imageUrl ? 'border-4 border-blue-500' : ''}`} onClick={() => { handleImageSelect(imageUrl); setHostedURL(imageUrl); closeDrawer(); }} />
 								))}
 							</div>
 						</div>
-						<div className='flex justify-center mt-4'>
-							{/* Additional content or buttons */}
-						</div>
+						<div className='flex justify-center mt-4'></div>
 					</div>
 				</div>
 			)}

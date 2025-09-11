@@ -131,3 +131,14 @@ export const resetPasswordLink = async (user, res) => {
     res.status(404).json({ message: "Something went wrong" });
   }
 };
+
+export const sendGenericEmail = async ({ to, subject, html }) => {
+  try {
+    const mailOptions = { from: AUTH_EMAIL, to, subject, html };
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};

@@ -6,5 +6,6 @@ import ResetPassword from "./ResetPassword";
 import Admin from './Admin';
 import Notifications from './Notifications';
 import Ai from './Ai';
+import Hackathon from './Hackathon';
 
-export { Login, Home, Register, Profile, ResetPassword ,Admin, Notifications,Ai};
+export { Login, Home, Register, Profile, ResetPassword ,Admin, Notifications,Ai, Hackathon};

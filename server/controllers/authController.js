@@ -3,7 +3,7 @@ import { compareString, createJWT, hashString } from "../utils/index.js";
 import { sendVerificationEmail } from "../utils/sendEmail.js";
 
 export const register = async (req, res, next) => {
-  const { firstName, lastName, email, password, profileUrl } = req.body;
+  const { firstName, lastName, email, password, profileUrl, role, experienceLevel, portfolioUrl, githubUrl, linkedinUrl, university, graduationYear, profession, skills, location } = req.body;
 
   //validate fileds
   if (!(firstName || lastName || email || password)) {
@@ -27,6 +27,16 @@ export const register = async (req, res, next) => {
       email,
       password: hashedPassword,
       profileUrl,
+      role,
+      experienceLevel,
+      portfolioUrl,
+      githubUrl,
+      linkedinUrl,
+      university,
+      graduationYear,
+      profession,
+      skills,
+      location,
     });
 
     const token = createJWT(user._id);
@@ -35,6 +45,7 @@ export const register = async (req, res, next) => {
       success: "SUCCESSFUL",
       message: "Registration successful. Token created.",
       token,
+      user,
     });
 
     //send email verification to user

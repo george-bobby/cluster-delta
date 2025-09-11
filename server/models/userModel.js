@@ -32,7 +32,14 @@ const userSchema = new mongoose.Schema(
     verified: { type: Boolean, default: true },
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
-    skills: [{type:Array, default:[]}], 
+    skills: [{ type: String }],
+    role: { type: String, enum: ["student", "research_scholar"], default: "student" },
+    experienceLevel: { type: String, enum: ["beginner", "intermediate", "advanced", "expert"] },
+    portfolioUrl: { type: String },
+    githubUrl: { type: String },
+    linkedinUrl: { type: String },
+    university: { type: String },
+    graduationYear: { type: Number },
     },
   { timestamps: true }
 );

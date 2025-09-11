@@ -284,7 +284,7 @@ export const getUser = async (req, res, next) => {
 // };
 export const updateUser = async (req, res, next) => {
   try {
-    const { firstName, lastName, location, profileUrl, profession, skills, userId } = req.body;
+    const { firstName, lastName, location, profileUrl, profession, skills, userId, role, experienceLevel, portfolioUrl, githubUrl, linkedinUrl, university, graduationYear } = req.body;
 
     // Validate userId
     if (!userId) {
@@ -302,6 +302,13 @@ export const updateUser = async (req, res, next) => {
       profileUrl,
       profession,
       skills,
+      role,
+      experienceLevel,
+      portfolioUrl,
+      githubUrl,
+      linkedinUrl,
+      university,
+      graduationYear,
       _id: userId,
     };
 
