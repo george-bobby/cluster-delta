@@ -5,61 +5,68 @@ Below are the instructions for setting up and running the project.
 ---
 
 ## Folder Structure
+
 ```
 cluster-delta
+
 ├── client
 ├── server
-└── model
 ```
 
 - **client**: Frontend code (Next.js application).
 - **server**: Backend code (Node.js application).
-- **model**: Currently not in use. No need to work on this folder.
 
 ---
 
 ## Setup Instructions
 
 ### Frontend (Client)
+
 1. Navigate to the client directory:
    ```bash
    cd client
    ```
 2. Install dependencies:
    ```bash
-   npm install
+   npm install --force
+   ```
+3. Start the client:
+   ```bash
+   npm start
    ```
 
 ### Backend (Server)
-1. Navigate to the server directory:
+
+1. Open a New Terminal
+
+2. Navigate to the server directory:
    ```bash
    cd server
    ```
-2. Start the server:
+3. Install dependencies:
+   ```bash
+   npm install --force
+   ```
+4. Start the server:
    ```bash
    npm start
    ```
 
 ---
 
-## MongoDB Access
-- MongoDB access has been granted to all team members.
-- If you do not have access, please send your email ID via direct message.
-
----
-
 ## Environment Variables
-- The `.env.local` file has been shared in the common group. Ensure you add it to the root directories of the `client` and `server` folders.
+
+- The env file for `server` folder is there in the repo already.
+- The env file for `client` folder is not there in the repo. Create a new file named `.env.local` in the `client` folder and add the following line:
+  ```bash
+  NEXT_PUBLIC_API_URL=http://localhost:8800
+  ```
 
 ---
 
-## Important Notes
-1. **Frontend API Endpoints**:
-   - The frontend currently uses APIs hosted on Render.
-   - Use the `search and replace` functionality in your editor to replace all API URLs with the `localhost` URL once the server is running.
-   - The `localhost` URL will be available after you start the backend server.
+## MongoDB Access
 
-2. **Model Folder**:
-   - Currently, no work is required on the `model` folder.
+- Download and Install MongoDB Compass on your Machine
+- MongoDB Connectuon URI is given in the .env file of `/server` folder. Copy that and paste it in new connection option inside Compass App
 
 ---
