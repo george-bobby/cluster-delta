@@ -36,7 +36,7 @@ import welcome from '../assets/welcome.png';
 const Home = () => {
 	const { user, edit } = useSelector((state) => state.user);
 	const [friendRequest, setFriendRequest] = useState(requests);
-	const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+	const [suggestedFriends, setSuggestedFriends] = useState([]);
 	const [errMsg, setErrMsg] = useState('');
 	const [file, setFile] = useState(null);
 	const [posting, setPosting] = useState(false);
@@ -158,6 +158,44 @@ const Home = () => {
 
 		fetchPosts();
 	}, []);
+
+	// Fetch skill-based friend suggestions
+	useEffect(() => {
+		const fetchSuggestedFriends = async () => {
+			if (!user?._id) return;
+			
+			try {
+				const userToken = localStorage.getItem('user');
+				if (!userToken) {
+					console.error('No authentication token found');
+					return;
+				}
+
+				const parsedToken = JSON.parse(userToken);
+				if (!parsedToken?.token) {
+					console.error('Invalid token format');
+					return;
+				}
+
+				const response = await axios.post(
+					`${BACKEND_URL}/users/suggested-friends`,
+					{ userId: user._id }
+				);
+
+				if (response.status === 200) {
+					setSuggestedFriends(response.data.data);
+					console.log('Skill-based friend suggestions:', response.data.data);
+				} else {
+					console.error('Failed to fetch friend suggestions:', response.data.message);
+				}
+			} catch (error) {
+				console.error('Error fetching friend suggestions:', error.message);
+				console.error('Full error:', error);
+			}
+		};
+
+		fetchSuggestedFriends();
+	}, [user?._id]);
 
 	const handlePostSubmit = async (data) => {
 		try {
@@ -523,43 +561,69 @@ const Home = () => {
 						<div className='w-full bg-primary shadow-sm rounded-lg px-5 py-5'>
 							<div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
 								<span>Friend Suggestion</span>
+								<span className='text-xs text-ascent-2'>Based on Skills</span>
 							</div>
 							<div className='w-full flex flex-col gap-4 pt-4'>
-								{suggestedFriends?.map((friend) => (
-									<div
-										className='flex items-center justify-between'
-										key={friend._id}
-									>
-										<Link
-											to={'/profile/' + friend?._id}
-											key={friend?._id}
-											className='w-full flex gap-4 items-center cursor-pointer'
+								{suggestedFriends?.length > 0 ? (
+									suggestedFriends.map((friend) => (
+										<div
+											className='flex items-center justify-between'
+											key={friend._id}
 										>
-											<img
-												src={friend?.profileUrl ?? NoProfile}
-												alt={friend?.firstName}
-												className='w-10 h-10 object-cover rounded-full'
-											/>
-											<div className='flex-1 '>
-												<p className='text-base font-medium text-ascent-1'>
-													{friend?.firstName} {friend?.lastName}
-												</p>
-												<span className='text-sm text-ascent-2'>
-													{friend?.profession ?? 'No Profession'}
-												</span>
-											</div>
-										</Link>
-
-										<div className='flex gap-1'>
-											<button
-												className='bg-[#0444a430] text-sm text-white p-1 rounded'
-												onClick={() => {}}
+											<Link
+												to={'/profile/' + friend?._id}
+												key={friend?._id}
+												className='w-full flex gap-4 items-center cursor-pointer'
 											>
-												<BsPersonFillAdd size={20} className='text-[#0f52b6]' />
-											</button>
+												<img
+													src={friend?.profileUrl ?? NoProfile}
+													alt={friend?.firstName}
+													className='w-10 h-10 object-cover rounded-full'
+												/>
+												<div className='flex-1 '>
+													<p className='text-base font-medium text-ascent-1'>
+														{friend?.firstName} {friend?.lastName}
+													</p>
+													<span className='text-sm text-ascent-2'>
+														{friend?.profession ?? 'No Profession'}
+													</span>
+													{friend?.skills && friend.skills.length > 0 && (
+														<div className='flex flex-wrap gap-1 mt-1'>
+															{friend.skills.slice(0, 3).map((skill, index) => (
+																<span
+																	key={index}
+																	className='text-xs bg-blue text-white px-2 py-0.5 rounded-full'
+																	style={{ backgroundColor: '#0444a4', fontSize: '10px' }}
+																>
+																	{skill}
+																</span>
+															))}
+															{friend.skills.length > 3 && (
+																<span className='text-xs text-ascent-2'>
+																	+{friend.skills.length - 3} more
+																</span>
+															)}
+														</div>
+													)}
+												</div>
+											</Link>
+
+											<div className='flex gap-1'>
+												<button
+													className='bg-[#0444a430] text-sm text-white p-1 rounded'
+													onClick={() => {}}
+												>
+													<BsPersonFillAdd size={20} className='text-[#0f52b6]' />
+												</button>
+											</div>
 										</div>
+									))
+								) : (
+									<div className='text-center text-ascent-2 py-4'>
+										<p className='text-sm'>No skill-based suggestions available</p>
+										<p className='text-xs mt-1'>Add skills to your profile to get better suggestions</p>
 									</div>
-								))}
+								)}
 							</div>
 						</div>
 					</div>

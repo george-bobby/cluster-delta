@@ -477,23 +477,95 @@ export const profileViews = async (req, res, next) => {
 
 export const suggestedFriends = async (req, res) => {
   try {
-    const { userId } = req.body.user;
+    const { userId } = req.body;
 
-    let queryObject = {};
+    // Get current user's skills
+    const currentUser = await Users.findById(userId).select("skills friends");
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    queryObject._id = { $ne: userId };
+    const currentUserSkills = currentUser.skills || [];
+    const currentUserFriends = currentUser.friends || [];
 
-    queryObject.friends = { $nin: userId };
+    // Find all users except current user and existing friends
+    const allUsers = await Users.find({
+      _id: { $ne: userId, $nin: currentUserFriends }
+    }).select("firstName lastName profileUrl profession skills -password");
 
-    let queryResult = Users.find(queryObject)
-      .limit(15)
-      .select("firstName lastName profileUrl profession -password");
+    // Calculate skill similarity for each user
+    const usersWithSimilarity = allUsers.map(user => {
+      const userSkills = user.skills || [];
+      
+      // Flatten skills array if it's nested
+      const flatCurrentSkills = currentUserSkills.flat();
+      const flatUserSkills = userSkills.flat();
+      
+      // Calculate similarity score based on common skills
+      const commonSkills = flatCurrentSkills.filter(skill => 
+        flatUserSkills.some(userSkill => 
+          userSkill.toLowerCase().trim() === skill.toLowerCase().trim()
+        )
+      );
+      
+      // Calculate similarity percentage
+      const totalUniqueSkills = new Set([...flatCurrentSkills, ...flatUserSkills]).size;
+      const similarityScore = totalUniqueSkills > 0 ? (commonSkills.length / totalUniqueSkills) * 100 : 0;
+      
+      return {
+        ...user.toObject(),
+        similarityScore,
+        commonSkills: commonSkills.length,
+        actualCommonSkills: commonSkills
+      };
+    });
 
-    const suggestedFriends = await queryResult;
+    // Sort by similarity score (descending) and filter users with at least some similarity
+    const suggestedFriends = usersWithSimilarity
+      .filter(user => user.commonSkills > 0) // Only users with at least 1 common skill
+      .sort((a, b) => {
+        // First sort by number of common skills, then by similarity score
+        if (b.commonSkills !== a.commonSkills) {
+          return b.commonSkills - a.commonSkills;
+        }
+        return b.similarityScore - a.similarityScore;
+      })
+      .slice(0, 5); // Limit to 5 suggestions as requested
+
+    // If no users with similar skills found, return some random users
+    if (suggestedFriends.length === 0) {
+      const randomUsers = usersWithSimilarity
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
+      
+      return res.status(200).json({
+        success: true,
+        data: randomUsers.map(user => ({
+          _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          profileUrl: user.profileUrl,
+          profession: user.profession,
+          skills: user.skills
+        })),
+        message: "No users with similar skills found. Showing random suggestions."
+      });
+    }
+
+    // Remove similarity scores from response (keep it clean for frontend)
+    const cleanSuggestions = suggestedFriends.map(user => ({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileUrl: user.profileUrl,
+      profession: user.profession,
+      skills: user.skills
+    }));
 
     res.status(200).json({
       success: true,
-      data: suggestedFriends,
+      data: cleanSuggestions,
+      message: "Friend suggestions based on similar skills"
     });
   } catch (error) {
     console.log(error);
