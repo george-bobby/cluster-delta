@@ -49,7 +49,7 @@ router.post("/accept-request", userAuth, acceptRequest);
 router.post("/profile-view", userAuth, profileViews);
 
 //suggested friends
-router.post("/suggested-friends", userAuth, suggestedFriends);
+router.post("/suggested-friends", suggestedFriends);
 
 router.get("/verified", (req, res) => {
   res.sendFile(path.join(__dirname, "./views/build", "index.html"));
