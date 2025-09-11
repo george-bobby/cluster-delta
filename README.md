@@ -54,6 +54,13 @@ cluster-delta
 
 ---
 
+## Defaults
+
+- Client dev server: http://localhost:3000
+- API server: http://localhost:8800
+
+---
+
 ## Environment Variables
 
 - The env file for `server` folder is there in the repo already.
