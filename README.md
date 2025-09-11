@@ -58,6 +58,14 @@ The server exposes the following API endpoints:
 
 ---
 
+## Setup MongoDB
+
+- The connection URL is given in the `.env` file of `server` folder
+- Download and Install MongoDB Compass https://www.mongodb.com/try/download/compass
+- Cpoy and paste the connection URL in the New Connection option in MongoDB Compass
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -81,8 +89,6 @@ The server exposes the following API endpoints:
     npm install
     ```
 
-    Create a `.env` file in the `server` directory and add your MongoDB connection string and other environment variables.
-
 3.  **Setup the client:**
 
     ```bash
@@ -90,7 +96,7 @@ The server exposes the following API endpoints:
     npm install
     ```
 
-    Create a `.env` file in the `client` directory and add the following:
+    Create a `.env.local` file in the `client` directory and add the following:
 
     ```
     REACT_APP_API_URL=http://localhost:8800
@@ -105,7 +111,7 @@ The server exposes the following API endpoints:
     npm start
     ```
 
-2.  **Start the client:**
+2.  **Start the client in new Terminal:**
 
     ```bash
     cd ../client
