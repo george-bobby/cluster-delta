@@ -99,7 +99,7 @@ The server exposes the following API endpoints:
     Create a `.env.local` file in the `client` directory and add the following:
 
     ```
-    REACT_APP_API_URL=http://localhost:8800
+    REACT_APP_BACKEND_URL=http://localhost:8800
     ```
 
 ### Running the Application
