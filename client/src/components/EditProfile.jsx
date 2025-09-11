@@ -34,6 +34,13 @@ const EditProfile = ({
 			lastName: user?.lastName,
 			profession: userprof,
 			location: userlocation,
+			role: user?.role || 'student',
+			experienceLevel: user?.experienceLevel || 'beginner',
+			portfolioUrl: user?.portfolioUrl || '',
+			githubUrl: user?.githubUrl || '',
+			linkedinUrl: user?.linkedinUrl || '',
+			university: user?.university || '',
+			graduationYear: user?.graduationYear || ''
 		},
 	});
 
@@ -76,6 +83,13 @@ const EditProfile = ({
 				skills: skills.length === 0 ? user.skills : skills,
 				profileUrl: picture || userprofileurl,
 				userId: userid,
+				role: data.role,
+				experienceLevel: data.experienceLevel,
+				portfolioUrl: data.portfolioUrl,
+				githubUrl: data.githubUrl,
+				linkedinUrl: data.linkedinUrl,
+				university: data.university,
+				graduationYear: data.graduationYear,
 			};
 			formData = JSON.stringify(formData);
 			console.log(formData);
@@ -232,7 +246,26 @@ const EditProfile = ({
 							})}
 							error={errors.location ? errors.location?.message : ''}
 						/>
-
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<select className='input input-bordered w-full' {...register('role')}>
+								<option value='student'>Student</option>
+								<option value='research_scholar'>Research Scholar</option>
+							</select>
+							<select className='input input-bordered w-full' {...register('experienceLevel')}>
+								<option value='beginner'>Beginner</option>
+								<option value='intermediate'>Intermediate</option>
+								<option value='advanced'>Advanced</option>
+								<option value='expert'>Expert</option>
+							</select>
+						</div>
+						<TextInput name='portfolioUrl' label='Portfolio URL' placeholder='https://...' type='text' styles='w-full' register={register('portfolioUrl')} />
+						<TextInput name='githubUrl' label='GitHub URL' placeholder='https://github.com/...' type='text' styles='w-full' register={register('githubUrl')} />
+						<TextInput name='linkedinUrl' label='LinkedIn URL' placeholder='https://linkedin.com/in/...' type='text' styles='w-full' register={register('linkedinUrl')} />
+						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
+							<TextInput name='university' label='University' placeholder='Your University' type='text' styles='w-full' register={register('university')} />
+							<TextInput name='graduationYear' label='Graduation Year' placeholder='2026' type='number' styles='w-full' register={register('graduationYear')} />
+						</div>
+						
 						{/* Skills Input */}
 						<label className='text-ascent-2 text-sm w-full' htmlFor='skills'>
 							Skills
