@@ -1,4 +1,4 @@
-import { BACKEND_URL } from '../utils/api';
+import { apiRequest } from '../utils/api';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -27,42 +27,22 @@ const Login = () => {
 		setIsSubmitting(true);
 
 		try {
-			const response = await fetch(`${BACKEND_URL}/auth/login`, {
+			const res = await apiRequest({
+				url: '/auth/login',
+				data: data,
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
 			});
 
-			if (response.ok) {
-				const result = await response.json();
-				setErrMsg('');
-				console.log(result);
-
-				const newData = { token: result?.token, ...result?.user };
-				setErrMsg({
-					status: 'success',
-					message: 'Login successful!',
-				});
-
-				dispatch(UserLogin(newData));
-
-				setTimeout(() => {
-					window.location.replace('/');
-				}, 1000);
+			if (res?.status === 'failed') {
+				setErrMsg(res);
 			} else {
-				const result = await response.json();
-				setErrMsg(result.message);
-
-				setErrMsg({
-					status: 'failed',
-					message: result.message || 'Registration failed. Please try again.',
-				});
-				console.error('Login failed', result.message);
+				setErrMsg('');
+				const newData = { token: res?.token, ...res?.user };
+				dispatch(UserLogin(newData));
+				window.location.replace('/');
 			}
 		} catch (error) {
-			console.error('Error during login', error);
+			console.log(error);
 		} finally {
 			setIsSubmitting(false);
 		}
