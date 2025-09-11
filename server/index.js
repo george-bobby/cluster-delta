@@ -1,23 +1,23 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import morgan from "morgan";
-import path from "path";
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
+import path from 'path';
 // Security packages
-import helmet from "helmet";
-import dbConnection from "./dbConfig/index.js";
-import errorMiddleware from "./middleware/errorMiddleware.js";
-import router from "./routes/index.js";
-import { configureCloudinaryRoutes } from "./controllers/imageUploadController.js";
-import User from "./models/userModel.js";
+import helmet from 'helmet';
+import dbConnection from './dbConfig/index.js';
+import errorMiddleware from './middleware/errorMiddleware.js';
+import router from './routes/index.js';
+import { configureImageKitRoutes } from './controllers/imagekitController.js';
+import User from './models/userModel.js';
 
-const __dirname = path.resolve(path.dirname(""));
+const __dirname = path.resolve(path.dirname(''));
 
 dotenv.config();
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, "views/build")));
+app.use(express.static(path.join(__dirname, 'views/build')));
 
 const PORT = process.env.PORT || 8800;
 
@@ -34,14 +34,14 @@ app.use(cors());
 //   })
 // );
 
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 app.use(router);
 
 // app.use(`/api`, router);
-configureCloudinaryRoutes(app);
+configureImageKitRoutes(app);
 
 // Error middleware
 app.use(errorMiddleware);
@@ -55,5 +55,5 @@ app.use(errorMiddleware);
 // }));
 
 app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
+	console.log(`Server running on port: ${PORT}`);
 });

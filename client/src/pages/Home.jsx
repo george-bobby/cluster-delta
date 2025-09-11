@@ -20,8 +20,11 @@ import { BsFiletypeGif, BsPersonFillAdd } from 'react-icons/bs';
 import { BiImages, BiSolidVideo } from 'react-icons/bi';
 import { useForm } from 'react-hook-form';
 import { SetPosts } from '../redux/postSlice';
-import { imageDB } from '../firebase/imageDb';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { IKUpload } from 'imagekitio-react';
+import {
+	imagekitConfig,
+	getAuthenticationParameters,
+} from '../config/imagekit';
 import { v4 } from 'uuid';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -156,29 +159,39 @@ const Home = () => {
 		fetchPosts();
 	}, []);
 
-	// const storage = firebase.storage();
-	// const storageRef = storage.ref();
-
 	const handlePostSubmit = async (data) => {
 		try {
 			setErrMsg('');
 			setPosting(true);
 
-			// If an image is selected, upload it to Firebase Storage first
+			// If an image is selected, upload it to ImageKit first
 			let imageUrl = null;
 
 			if (image) {
 				try {
-					const imageRef = ref(imageDB, `file/${v4()}`);
-					await uploadBytes(imageRef, image);
+					// Create FormData for the upload
+					const formData = new FormData();
+					formData.append('file', image);
+					formData.append('fileName', `post_${v4()}_${image.name}`);
+					formData.append('folder', '/posts');
 
-					// Get the download URL of the uploaded image
-					imageUrl = await getDownloadURL(imageRef);
-				} catch (uploadError) {
-					console.error(
-						'Error uploading image to Firebase Storage:',
-						uploadError
+					// Upload to ImageKit via server endpoint
+					const uploadResponse = await fetch(
+						`${BACKEND_URL}/imagekit/upload-image`,
+						{
+							method: 'POST',
+							body: formData,
+						}
 					);
+
+					if (!uploadResponse.ok) {
+						throw new Error('Upload failed');
+					}
+
+					const uploadResult = await uploadResponse.json();
+					imageUrl = uploadResult.secure_url;
+				} catch (uploadError) {
+					console.error('Error uploading image to ImageKit:', uploadError);
 					setErrMsg({
 						message: 'Image upload error occurred!',
 						status: 'failed',
