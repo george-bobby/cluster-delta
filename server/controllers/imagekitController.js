@@ -34,7 +34,7 @@ const configureImageKitRoutes = (app) => {
 			const result = await imagekit.upload({
 				file: fileBuffer,
 				fileName: req.file.originalname || `image_${Date.now()}`,
-				folder: '/cluster',
+				folder: '/cluster/posts',
 			});
 
 			// Clean up temporary file

@@ -30,17 +30,17 @@ const Register = () => {
 	const [selectedImage, setSelectedImage] = useState('');
 
 	const imageUrls = [
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/9_qem0gy.png?updatedAt=1726898107678',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/8_teqjug.png?updatedAt=1726898105064',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/2_xx0yam.png?updatedAt=1726898105058',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/6_lvbuxr.png?updatedAt=1726898105029',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/3_rhzono.png?updatedAt=1726898105025g',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/1_wa6j8q.png?updatedAt=1726898104970',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/12_k6sjtd.png?updatedAt=1726898105053',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/11_h1axb3.png?updatedAt=1726898105022',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/10_duuwsu.png?updatedAt=1726898105032',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/7_j9h2sr.png?updatedAt=1726898104964',
-		'https://ik.imagekit.io/georgebobby/cluster-pfp/4_bvss6a.png?updatedAt=1726898104891',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/9_qem0gy.png?updatedAt=1726898107678',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/8_teqjug.png?updatedAt=1726898105064',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/2_xx0yam.png?updatedAt=1726898105058',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/6_lvbuxr.png?updatedAt=1726898105029',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/3_rhzono.png?updatedAt=1726898105025g',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/1_wa6j8q.png?updatedAt=1726898104970',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/12_k6sjtd.png?updatedAt=1726898105053',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/11_h1axb3.png?updatedAt=1726898105022',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/10_duuwsu.png?updatedAt=1726898105032',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/7_j9h2sr.png?updatedAt=1726898104964',
+		'https://ik.imagekit.io/georgebobby/cluster/profiles/4_bvss6a.png?updatedAt=1726898104891',
 	];
 
 	const handleImageSelect = (imageUrl) => {
@@ -62,7 +62,10 @@ const Register = () => {
 			const postData = {
 				...data,
 				profileUrl: selectedImage,
-				skills: (data.skills || '').split(',').map((s) => s.trim()).filter(Boolean),
+				skills: (data.skills || '')
+					.split(',')
+					.map((s) => s.trim())
+					.filter(Boolean),
 			};
 
 			const response = await fetch(`${BACKEND_URL}/auth/register`, {
@@ -160,7 +163,9 @@ const Register = () => {
 								placeholder='First Name'
 								type='text'
 								styles='w-full'
-								register={register('firstName', { required: 'First Name is required!' })}
+								register={register('firstName', {
+									required: 'First Name is required!',
+								})}
 								error={errors.firstName ? errors.firstName?.message : ''}
 							/>
 							<TextInput
@@ -168,7 +173,9 @@ const Register = () => {
 								placeholder='Last Name'
 								type='lastName'
 								styles='w-full'
-								register={register('lastName', { required: 'Last Name do no match' })}
+								register={register('lastName', {
+									required: 'Last Name do no match',
+								})}
 								error={errors.lastName ? errors.lastName?.message : ''}
 							/>
 						</div>
@@ -178,7 +185,9 @@ const Register = () => {
 							placeholder='email@example.com'
 							label='Email Address'
 							type='email'
-							register={register('email', { required: 'Email Address is required' })}
+							register={register('email', {
+								required: 'Email Address is required',
+							})}
 							styles='w-full'
 							error={errors.email ? errors.email.message : ''}
 						/>
@@ -190,7 +199,9 @@ const Register = () => {
 								placeholder='Password'
 								type='password'
 								styles='w-full'
-								register={register('password', { required: 'Password is required!' })}
+								register={register('password', {
+									required: 'Password is required!',
+								})}
 								error={errors.password ? errors.password?.message : ''}
 							/>
 							<TextInput
@@ -206,16 +217,26 @@ const Register = () => {
 										}
 									},
 								})}
-								error={errors.cPassword && errors.cPassword.type === 'validate' ? errors.cPassword?.message : ''}
+								error={
+									errors.cPassword && errors.cPassword.type === 'validate'
+										? errors.cPassword?.message
+										: ''
+								}
 							/>
 						</div>
 
 						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-							<select className='input input-bordered w-full' {...register('role')}> 
+							<select
+								className='input input-bordered w-full'
+								{...register('role')}
+							>
 								<option value='student'>Student</option>
 								<option value='research_scholar'>Research Scholar</option>
 							</select>
-							<select className='input input-bordered w-full' {...register('experienceLevel')}> 
+							<select
+								className='input input-bordered w-full'
+								{...register('experienceLevel')}
+							>
 								<option value='beginner'>Beginner</option>
 								<option value='intermediate'>Intermediate</option>
 								<option value='advanced'>Advanced</option>
@@ -224,20 +245,68 @@ const Register = () => {
 						</div>
 
 						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-							<TextInput name='portfolioUrl' label='Portfolio URL' placeholder='https://...' type='text' styles='w-full' register={register('portfolioUrl')} />
-							<TextInput name='githubUrl' label='GitHub URL' placeholder='https://github.com/...' type='text' styles='w-full' register={register('githubUrl')} />
+							<TextInput
+								name='portfolioUrl'
+								label='Portfolio URL'
+								placeholder='https://...'
+								type='text'
+								styles='w-full'
+								register={register('portfolioUrl')}
+							/>
+							<TextInput
+								name='githubUrl'
+								label='GitHub URL'
+								placeholder='https://github.com/...'
+								type='text'
+								styles='w-full'
+								register={register('githubUrl')}
+							/>
 						</div>
 						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-							<TextInput name='linkedinUrl' label='LinkedIn URL' placeholder='https://linkedin.com/in/...' type='text' styles='w-full' register={register('linkedinUrl')} />
-							<TextInput name='university' label='University' placeholder='Your University' type='text' styles='w-full' register={register('university')} />
+							<TextInput
+								name='linkedinUrl'
+								label='LinkedIn URL'
+								placeholder='https://linkedin.com/in/...'
+								type='text'
+								styles='w-full'
+								register={register('linkedinUrl')}
+							/>
+							<TextInput
+								name='university'
+								label='University'
+								placeholder='Your University'
+								type='text'
+								styles='w-full'
+								register={register('university')}
+							/>
 						</div>
 						<div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-							<TextInput name='graduationYear' label='Graduation Year' placeholder='2026' type='number' styles='w-full' register={register('graduationYear')} />
-							<TextInput name='skills' label='Skills (comma separated)' placeholder='React, Node, ML' type='text' styles='w-full' register={register('skills')} />
+							<TextInput
+								name='graduationYear'
+								label='Graduation Year'
+								placeholder='2026'
+								type='number'
+								styles='w-full'
+								register={register('graduationYear')}
+							/>
+							<TextInput
+								name='skills'
+								label='Skills (comma separated)'
+								placeholder='React, Node, ML'
+								type='text'
+								styles='w-full'
+								register={register('skills')}
+							/>
 						</div>
 
 						{errMsg?.message && (
-							<span className={`text-sm ${errMsg?.status == 'failed' ? 'text-[#f64949fe]' : 'text-[#2ba150fe]'} mt-0.5`}>
+							<span
+								className={`text-sm ${
+									errMsg?.status == 'failed'
+										? 'text-[#f64949fe]'
+										: 'text-[#2ba150fe]'
+								} mt-0.5`}
+							>
 								{errMsg?.message}
 							</span>
 						)}
@@ -245,13 +314,20 @@ const Register = () => {
 						{isSubmitting ? (
 							<Loading />
 						) : (
-							<CustomButton type='submit' containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`} title='Create Account' />
+							<CustomButton
+								type='submit'
+								containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
+								title='Create Account'
+							/>
 						)}
 					</form>
 
 					<p className='text-ascent-2 text-sm text-center'>
 						Already has an account?{' '}
-						<Link to='/login' className='text-[#065ad8] font-semibold ml-2 cursor-pointer'>
+						<Link
+							to='/login'
+							className='text-[#065ad8] font-semibold ml-2 cursor-pointer'
+						>
 							Login
 						</Link>
 					</p>
@@ -260,7 +336,11 @@ const Register = () => {
 
 				<div className='hidden w-1/2 h-full lg:flex flex-col items-center justify-center bg-blue'>
 					<div className='relative w-full flex items-center justify-center'>
-						<img src={Bgmain} alt='Bg Image' className='w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover' />
+						<img
+							src={Bgmain}
+							alt='Bg Image'
+							className='w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover'
+						/>
 						<div className='absolute flex items-center gap-1 bg-white right-10 top-10 py-2 px-5 rounded-full'>
 							<BsShare size={14} />
 							<span className='text-xs font-medium'>Share</span>
@@ -292,15 +372,37 @@ const Register = () => {
 
 			{isDrawerOpen && (
 				<div className='fixed inset-0 flex items-end justify-center z-50'>
-					<div style={{ backgroundColor: '#000000' }} className='p-4 rounded-t-lg'>
+					<div
+						style={{ backgroundColor: '#000000' }}
+						className='p-4 rounded-t-lg'
+					>
 						<div className='flex justify-end'>
-							<FaTimes onClick={() => closeDrawer()} style={{ color: 'red' }} className='cursor-pointer text-red-500 text-2xl' />
+							<FaTimes
+								onClick={() => closeDrawer()}
+								style={{ color: 'red' }}
+								className='cursor-pointer text-red-500 text-2xl'
+							/>
 						</div>
 						<div className='flex flex-col items-center'>
 							<p style={{ color: 'white' }}>Choose Your Profile Picture.</p>
 							<div className='flex flex-wrap justify-center mt-4'>
 								{imageUrls.map((imageUrl, index) => (
-									<img key={index} src={imageUrl} style={{ margin: '8px', width: '80px', height: '80px' }} alt={`Avatar ${index + 1}`} className={`rounded-full cursor-pointer ${selectedImage === imageUrl ? 'border-4 border-blue-500' : ''}`} onClick={() => { handleImageSelect(imageUrl); setHostedURL(imageUrl); closeDrawer(); }} />
+									<img
+										key={index}
+										src={imageUrl}
+										style={{ margin: '8px', width: '80px', height: '80px' }}
+										alt={`Avatar ${index + 1}`}
+										className={`rounded-full cursor-pointer ${
+											selectedImage === imageUrl
+												? 'border-4 border-blue-500'
+												: ''
+										}`}
+										onClick={() => {
+											handleImageSelect(imageUrl);
+											setHostedURL(imageUrl);
+											closeDrawer();
+										}}
+									/>
 								))}
 							</div>
 						</div>
